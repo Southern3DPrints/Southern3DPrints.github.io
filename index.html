@@ -1,1 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NovaShop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <style>
+    /* RESET */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: #0f1220;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* ---------- LOADER ---------- */
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: #0f1220;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 1s ease;
+    }
+
+    .spinner {
+      width: 70px;
+      height: 70px;
+      border: 6px solid #2a2f55;
+      border-top: 6px solid #6c7cff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ---------- MAIN CONTENT ---------- */
+    #content {
+      opacity: 0;
+      animation: fadeIn 1s ease forwards;
+      animation-delay: 1s;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    header {
+      padding: 30px;
+      text-align: center;
+      background: linear-gradient(135deg, #6c7cff, #8f6bff);
+      animation: slideDown 1s ease;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    header h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      opacity: 0.85;
+    }
+
+    /* SEARCH */
+    .search-box {
+      margin: 30px auto;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 25px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+    }
+
+    /* ITEMS GRID */
+    .store {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 25px;
+      padding: 40px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .item {
+      background: #1b1f3b;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: popIn 0.6s ease forwards;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .item:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    .item h3 {
+      margin-bottom: 8px;
+    }
+
+    .price {
+      color: #6c7cff;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .item button {
+      padding: 10px 16px;
+      border-radius: 20px;
+      border: none;
+      background: #6c7cff;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .item button:hover {
+      background: #8f6bff;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOADING SCREEN -->
+  <div id="loader">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- MAIN SITE -->
+  <div id="content">
+    <header>
+      <h1>NovaShop</h1>
+      <p>Clean. Fast. Modern.</p>
+    </header>
+
+    <div class="search-box">
+      <input type="text" id="search" placeholder="Search items...">
+    </div>
+
+    <div class="store" id="store">
+      <div class="item">
+        <h3>Cosmic Hoodie</h3>
+        <div class="price">$49.99</div>
+        <button>Add to Cart</button>
+      </div>
+
+      <div class="item">
+        <h3>Neon Sneakers</h3>
+        <div class="price">$89.99</div>
+        <button>Add to Cart</button>
+      </div>
+
+      <div class="item">
+        <h3>Galaxy Backpack</h3>
+        <div class="price">$39.99</div>
+        <button>Add to Cart</button>
+      </div>
+
+      <div class="item">
+        <h3>Starlight Cap</h3>
+        <div class="price">$24.99</div>
+        <button>Add to Cart</button>
+      </div>
+    </div>
+
+    <footer>
+      © 2025 NovaShop
+    </footer>
+  </div>
+
+  <script>
+    // LOADER FADE OUT
+    window.addEventListener("load", () => {
+      const loader = document.getElementById("loader");
+      loader.style.opacity = "0";
+      setTimeout(() => loader.style.display = "none", 1000);
+    });
+
+    // SEARCH FUNCTION
+    const searchInput = document.getElementById("search");
+    const items = document.querySelectorAll(".item");
+
+    searchInput.addEventListener("keyup", () => {
+      const value = searchInput.value.toLowerCase();
+      items.forEach(item => {
+        const text = item.innerText.toLowerCase();
+        item.style.display = text.includes(value) ? "block" : "none";
+      });
+    });
+  </script>
+
+</body>
+</html>
