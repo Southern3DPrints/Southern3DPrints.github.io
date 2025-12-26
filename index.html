@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>NovaShop</title>
+<title>Southern 3Ds</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -38,7 +38,10 @@ header h1 { font-size: 2.3rem; }
 .item button.added { opacity: 0.6; transform: scale(1.05); }
 
 /* PRODUCT PAGE */
-.page { position: fixed; inset: 0; background: #0f1220; z-index: 1000; display: none; padding: 25px; }
+.page { 
+  position: fixed; inset: 0; background: #0f1220; z-index: 900; display: none; padding: 25px; 
+  overflow-y: auto; /* allows scrolling if content is big */
+}
 .back { cursor: pointer; font-size: 1rem; opacity: 0.8; margin-bottom: 10px; }
 .back:hover { opacity: 1; }
 .page-content { max-width: 700px; margin: auto; }
@@ -58,7 +61,10 @@ header h1 { font-size: 2.3rem; }
 .page button.main.added { opacity: 0.6; transform: scale(1.05); }
 
 /* CART */
-.cart { position: fixed; right: -350px; top: 0; width: 300px; height: 100%; background: #1b1f3b; padding: 20px; transition: right 0.4s; z-index: 999; }
+.cart { 
+  position: fixed; right: -350px; top: 0; width: 300px; height: 100%; background: #1b1f3b; padding: 20px; 
+  transition: right 0.4s; z-index: 1000; /* above product page */
+}
 .cart.open { right: 0; }
 .cart-item { font-size: 0.9rem; margin-bottom: 8px; }
 .total { margin-top: 10px; font-weight: bold; }
@@ -88,7 +94,7 @@ footer { text-align: center; padding: 20px; opacity: 0.5; }
 <div id="loader"><div class="spinner"></div></div>
 
 <header>
-  <h1>NovaShop</h1>
+  <h1>Southern 3D Prints</h1>
   <div class="cart-icon" onclick="toggleCart()">🛒
     <span class="cart-count" id="cartCount">0</span>
   </div>
@@ -100,7 +106,7 @@ footer { text-align: center; padding: 20px; opacity: 0.5; }
 
 <div class="store" id="store"></div>
 
-<footer>© 2025 NovaShop</footer>
+<footer>© 2025 Southern 3D Prints</footer>
 
 <!-- PRODUCT PAGE -->
 <div class="page" id="productPage">
@@ -117,7 +123,7 @@ footer { text-align: center; padding: 20px; opacity: 0.5; }
     <h2 id="pageTitle"></h2>
     <p id="pageDesc"></p>
     <p class="price" id="pagePrice"></p>
-    <button class="main" id="pageAddBtn" onclick="addToCart(this)">Add to Cart</button>
+    <button class="main" id="pageAddBtn" onclick="addToCartPage()">Add to Cart</button>
   </div>
 </div>
 
@@ -146,8 +152,8 @@ window.onload = () => {
 };
 
 const products = [
-  { name: "Cosmic Hoodie", price: 49.99, desc: "Ultra-soft hoodie with a cosmic theme.", images: ["https://picsum.photos/600/400?random=1","https://picsum.photos/600/400?random=2"] },
-  { name: "Neon Sneakers", price: 89.99, desc: "Lightweight sneakers with neon accents.", images: ["https://picsum.photos/600/400?random=3","https://picsum.photos/600/400?random=4","https://picsum.photos/600/400?random=5"] }
+  { name: "F.R.I.E.N.D.S Keychain", price: 3.99, desc: "F.R.I.E.N.D.S Keychain is a GREAT pick for superfans!", images: ["https://cdn.thingiverse.com/renders/0f/76/85/e0/6b/e9d323d32f1c2ff34302aaa6c82a4c9f_display_large.jpg","https://cdn.thingiverse.com/renders/10/fe/4a/33/7b/44f357e2061f8efda5c32bfcb0889571_display_large.jpg"] },
+  { name: "Racoon", price: 5.99, desc: "Cute little racoon, great gift for your kids! NOTE: It does NOT come colored.", images: ["https://cdn.thingiverse.com/assets/16/48/4c/b5/4d/large_display_20251110_083145.jpg","https://cdn.thingiverse.com/assets/75/f1/33/af/10/large_display_20251110_083201.jpg"] }
 ];
 
 let cart = [];
@@ -161,6 +167,12 @@ const cartTotalDiv = document.getElementById("cartTotal");
 const cartCountSpan = document.getElementById("cartCount");
 const checkoutOverlay = document.getElementById("checkoutOverlay");
 const checkoutPopup = document.getElementById("checkoutPopup");
+const galleryImage = document.getElementById("galleryImage");
+const dots = document.getElementById("dots");
+const pageTitle = document.getElementById("pageTitle");
+const pageDesc = document.getElementById("pageDesc");
+const pagePrice = document.getElementById("pagePrice");
+const pageAddBtn = document.getElementById("pageAddBtn");
 
 products.forEach(p => {
   const div = document.createElement("div");
@@ -192,14 +204,14 @@ function updateImage() {
 function openPage(product) {
   currentProduct = product;
   imageIndex = 0;
-  productPage.style.display = "block";
+  document.getElementById("productPage").style.display = "block";
   pageTitle.textContent = product.name;
   pageDesc.textContent = product.desc;
   pagePrice.textContent = "$" + product.price;
   updateImage();
 }
 
-function closePage() { productPage.style.display = "none"; }
+function closePage() { document.getElementById("productPage").style.display = "none"; }
 
 function nextImage() { imageIndex = (imageIndex + 1) % currentProduct.images.length; updateImage(); }
 function prevImage() { imageIndex = (imageIndex - 1 + currentProduct.images.length) % currentProduct.images.length; updateImage(); }
@@ -211,7 +223,7 @@ function animateAdd(btn) {
   setTimeout(() => { btn.textContent = original; btn.classList.remove("added"); }, 3000);
 }
 
-function addToCart(btn) { cart.push(currentProduct); updateCart(); animateAdd(btn); }
+function addToCartPage() { cart.push(currentProduct); updateCart(); animateAdd(pageAddBtn); }
 function quickAdd(btn, product) { cart.push(product); updateCart(); animateAdd(btn); }
 
 function toggleCart() { cartDiv.classList.toggle("open"); }
