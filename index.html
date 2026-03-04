@@ -2,23 +2,281 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Lua Loadstring Generator</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Library</title>
+    <style>
+        :root {
+            --bg: #0b0f19;
+            --card-bg: #161d2f;
+            --accent: #38bdf8;
+            --text: #ffffff;
+            --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        body {
+            margin: 0;
+            padding: 60px 20px;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            transition: filter 0.3s ease;
+        }
+
+        h1 { font-size: 2.5rem; margin: 0 0 10px 0; }
+
+        .divider {
+            height: 4px;
+            width: 60px;
+            background: var(--accent);
+            margin: 0 auto;
+            border-radius: 10px;
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1000px;
+            transition: filter 0.3s ease;
+        }
+
+        .video-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #2e3748;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+        }
+
+        .poster-img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .video-title {
+            font-size: 0.95rem;
+            color: var(--accent);
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Pop-up Overlay */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            width: 90%;
+            max-width: 750px;
+            max-height: 90vh;
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+            overflow-y: auto;
+            border: 1px solid var(--accent);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+            transform: scale(0.8) translateY(40px);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .close-x {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            color: #94a3b8;
+            cursor: pointer;
+        }
+
+        .player-wrapper {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        video { width: 100%; height: 100%; display: block; }
+
+        .btn-full {
+            width: 100%;
+            background-color: #1e293b;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-full:hover {
+            background-color: var(--accent);
+            color: #0b0f19;
+        }
+
+        .details-trigger {
+            margin-top: 20px;
+            text-align: center;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 0.85rem;
+            text-decoration: underline;
+        }
+
+        .details-content {
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #2e3748;
+        }
+
+        .details-content h3 { color: var(--accent); margin-bottom: 10px; }
+        .details-content p { color: #cbd5e1; line-height: 1.6; font-size: 0.95rem; }
+
+        @media (max-width: 600px) {
+            .modal-content { padding: 20px; border-radius: 0; height: 100vh; max-height: 100vh; }
+        }
+    </style>
 </head>
 <body>
 
-<h1>Lua Protected Loadstring Generator</h1>
+    <div class="header" id="mainHeader">
+        <h1>Movies</h1>
+        <div class="divider"></div>
+    </div>
 
-<textarea id="luaInput" placeholder="Paste your Lua code here..."></textarea>
+    <div class="video-grid" id="mainGrid">
+        <div class="video-card" onclick="openPop('Anaconda (2025)', 'https://www.dropbox.com/scl/fi/ipfwgwemoz7xrjazxjlef/Anaconda.2025.720p.WEBRip.x264.AAC-YTS.BZ.mp4?rlkey=1xhir3ry192ewsmvzgdro2yve&st=9k2dg2x2&raw=1')">
+            <img src="https://pics.filmaffinity.com/Anaconda-237905960-large.jpg" class="poster-img" alt="Anaconda Poster">
+            <div class="video-title">Anaconda (2025)</div>
+        </div>
+    </div>
 
-<br>
+    <div id="videoModal" class="modal-overlay" onclick="closePop()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-x" onclick="closePop()">&times;</span>
+            <div id="mTitle" style="font-size: 1.6rem; color: var(--accent); font-weight: bold;"></div>
+           
+            <div class="player-wrapper">
+                <video id="mVideo" controls playsinline></video>
+            </div>
 
-<button onclick="generateLoadstring()">Generate Protected Loadstring</button>
+            <button id="mFull" class="btn-full">Go Fullscreen ⛶</button>
 
-<h2>Generated Loadstring</h2>
+            <div class="details-trigger" id="detailsBtn" onclick="toggleDetails()">Show More Details</div>
+           
+            <div id="detailsArea" class="details-content">
+                <h3>Movie Details</h3>
+                <p><strong>Released:</strong> 2025 | <strong>Director:</strong> Tom Gormican</p>
+                <p><strong>Cast:</strong> Jack Black, Thandiwe Newton, Paul Rudd</p>
+                <p>The 2025 Anaconda reimagining is a meta-comedy that follows a dysfunctional film crew hunting a real, giant snake in the Amazon.</p>
+            </div>
+        </div>
+    </div>
 
-<textarea id="output" readonly></textarea>
+    <script>
+        const video = document.getElementById('mVideo');
+        const modal = document.getElementById('videoModal');
+        const header = document.getElementById('mainHeader');
+        const grid = document.getElementById('mainGrid');
 
-<script src="script.js"></script>
+        function openPop(title, url) {
+            document.getElementById('mTitle').innerText = title;
+            video.src = url;
+           
+            const movieID = "time_" + btoa(url).substring(0, 12);
+
+            // This fires once the video is ready to play
+            video.oncanplay = function() {
+                const savedTime = localStorage.getItem(movieID);
+                if (savedTime) {
+                    video.currentTime = parseFloat(savedTime);
+                }
+                // Stop listening to this event so it doesn't loop
+                video.oncanplay = null;
+            };
+
+            // Save time as it plays
+            video.ontimeupdate = function() {
+                if (video.currentTime > 5) { // Only save if more than 5 seconds in
+                    localStorage.setItem(movieID, video.currentTime);
+                }
+            };
+
+            modal.classList.add('active');
+            header.style.filter = "blur(10px)";
+            grid.style.filter = "blur(10px)";
+            document.body.style.overflow = 'hidden';
+
+            document.getElementById('mFull').onclick = () => {
+                if (video.requestFullscreen) video.requestFullscreen();
+                else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
+            };
+        }
+
+        function closePop() {
+            modal.classList.remove('active');
+            header.style.filter = "none";
+            grid.style.filter = "none";
+            document.body.style.overflow = 'auto';
+           
+            setTimeout(() => {
+                video.pause();
+                video.src = ""; // Clear src to stop bandwidth usage
+            }, 400);
+        }
+
+        function toggleDetails() {
+            const area = document.getElementById('detailsArea');
+            const btn = document.getElementById('detailsBtn');
+            const isOpen = area.style.display === "block";
+            area.style.display = isOpen ? "none" : "block";
+            btn.innerText = isOpen ? "Show More Details" : "Hide Details";
+        }
+    </script>
 </body>
 </html>
