@@ -61,7 +61,7 @@
         .filter-row { display: flex; gap: 10px; width: 100%; }
         select { flex: 1; background: var(--card-bg); color: var(--text); border: 1px solid #2e3748; padding: 12px; border-radius: 8px; cursor: pointer; outline: none; }
 
-        /* Video Grid - Restored original spacing and sizing */
+        /* Video Grid */
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -91,7 +91,7 @@
         .poster-img { width: 100%; height: 280px; object-fit: cover; display: block; }
         .video-title { font-size: 0.95rem; color: var(--accent); padding: 15px; text-align: center; font-weight: bold; }
 
-        /* No Results Text - Positioned below controls */
+        /* No Results Text */
         #noResults {
             display: none;
             text-align: center;
@@ -131,7 +131,6 @@
         .btn-full { width: 100%; background-color: #1e293b; color: var(--accent); border: 1px solid var(--accent); padding: 14px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .btn-full:hover { background-color: var(--accent); color: #0b0f19; }
 
-        /* Show More Details - Restored original positioning */
         .details-trigger { margin-top: 20px; text-align: center; color: #94a3b8; cursor: pointer; font-size: 0.85rem; text-decoration: underline; }
         .details-content { display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid #2e3748; }
         .details-content h3 { color: var(--accent); margin-bottom: 10px; }
@@ -200,11 +199,24 @@
              data-trending="80"
              data-cast="Melissa Barrera, Jenna Ortega, Jasmin Savoy Brown"
              data-desc="Following the latest Ghostface killings, the four survivors leave Woodsboro behind and start a fresh chapter in New York City."
-             onclick="openPop(this, 'YOUR_SCREAM_URL_HERE')">
+             onclick="openPop(this, 'https://ucdf8cee495d6908fb4a633f57ab.dl.dropboxusercontent.com/cd/0/inline/C8BYhsEqbrvE9cVzKZGoWkKJ4xITKZ79huc95usBXm4IXCFuXh1xjgghaEBlFQC4ub1YCZlylmihU6FQFQRU7hxb4ZkSB1KV-r3yibU3gHQcRAI8w6e6YUJGa0mkfAOAhykp_6M51dSruHwvj5XMdvzY/file#?raw=1')">
             <img src="https://m.media-amazon.com/images/M/MV5BODBjM2M4YTQtNmJlMS00MGU2LWI4ZGYtZTA1MzdmZDAyMjFkXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_.jpg" class="poster-img">
             <div class="video-title">Scream VI (2023)</div>
         </div>
+       
+        <div class="video-card"
+             data-title="Final Destination: Bloodlines"
+             data-genre="Horror"
+             data-year="2025"
+             data-trending="80"
+             data-cast="Brec Bassinger, Teo Briones, Kaitlyn Santa Juana"
+             data-desc="A new group of people must cheat death after a terrifying premonition, only to realize that fate cannot be escaped forever."
+             onclick="openPop(this, 'https://ucd009150db525c4c7011f14cebe.dl.dropboxusercontent.com/cd/0/inline/C8CHYjEvKT_8VfhKQRIuum6xhfsWQ1p0lf4G51LnL0YjUB4FSWgKC5of2B28UBWnYFBb1eetEANWJmy1Ktz_bDuuzYjpY9AB2CQQ4TzkSXWKJD0iWBuQR06qy64-JjGDj3rGa4FTtB6ONsjmrLz9elb3/file#')">
+            <img src="https://img.yts.bz/assets/images/movies/final_destination_bloodlines_2025/medium-cover.jpg" class="poster-img">
+            <div class="video-title">Final Destination: Bloodlines (2025)</div>
+        </div>
     </div>
+
 
     <div id="videoModal" class="modal-overlay" onclick="closePop()">
         <div class="modal-content" onclick="event.stopPropagation()">
