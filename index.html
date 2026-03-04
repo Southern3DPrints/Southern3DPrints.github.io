@@ -9,13 +9,15 @@
             --bg: #0b0f19;
             --card-bg: #161d2f;
             --accent: #38bdf8;
+            --warning: #ef4444;
             --text: #ffffff;
             --transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            --nav-bg: rgba(22, 29, 47, 0.85);
         }
 
         body {
             margin: 0;
-            padding: 60px 20px;
+            padding: 100px 20px 60px 20px;
             font-family: 'Segoe UI', system-ui, sans-serif;
             background-color: var(--bg);
             color: var(--text);
@@ -24,23 +26,42 @@
             align-items: center;
         }
 
-        .header {
-            text-align: center;
+        /* Sticky Header */
+        .top-nav {
+            position: fixed; top: 0; left: 0; right: 0; height: 60px;
+            background: var(--nav-bg); backdrop-filter: blur(15px);
+            display: flex; align-items: center; justify-content: center;
+            border-bottom: 1px solid #2e3748; z-index: 1000;
+        }
+        .top-nav h1 { font-size: 1.5rem; margin: 0; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
+
+        /* Controls Section */
+        #controls {
+            width: 100%;
+            max-width: 1000px;
             margin-bottom: 50px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
             transition: filter 0.3s ease;
         }
-
-        h1 { font-size: 2.5rem; margin: 0 0 10px 0; }
-
-        .divider {
-            height: 4px;
-            width: 60px;
-            background: var(--accent);
-            margin: 0 auto;
-            border-radius: 10px;
-            box-shadow: 0 0 15px var(--accent);
+        .search-box input {
+            width: 100%;
+            padding: 15px 25px;
+            background: var(--card-bg);
+            border: 1px solid #2e3748;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            box-sizing: border-box;
+            outline: none;
+            transition: var(--transition);
         }
+        .search-box input:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(56,189,248,0.1); }
+        .filter-row { display: flex; gap: 10px; width: 100%; }
+        select { flex: 1; background: var(--card-bg); color: var(--text); border: 1px solid #2e3748; padding: 12px; border-radius: 8px; cursor: pointer; outline: none; }
 
+        /* Video Grid - Restored original spacing and sizing */
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -67,132 +88,121 @@
             box-shadow: 0 15px 30px rgba(0,0,0,0.5);
         }
 
-        .poster-img {
-            width: 100%;
-            height: 280px;
-            object-fit: cover;
-            display: block;
-        }
+        .poster-img { width: 100%; height: 280px; object-fit: cover; display: block; }
+        .video-title { font-size: 0.95rem; color: var(--accent); padding: 15px; text-align: center; font-weight: bold; }
 
-        .video-title {
-            font-size: 0.95rem;
-            color: var(--accent);
-            padding: 15px;
+        /* No Results Text - Positioned below controls */
+        #noResults {
+            display: none;
             text-align: center;
-            font-weight: bold;
+            margin: 50px 0;
+            color: #64748b;
+            font-size: 1.2rem;
+            width: 100%;
         }
 
-        /* Pop-up Overlay */
+        /* Modals */
         .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.85);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.4s ease, visibility 0.4s ease;
-            backdrop-filter: blur(10px);
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999; opacity: 0; visibility: hidden;
+            transition: 0.4s; backdrop-filter: blur(10px);
         }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
 
         .modal-content {
-            background: var(--card-bg);
-            width: 90%;
-            max-width: 750px;
-            max-height: 90vh;
-            border-radius: 20px;
-            padding: 30px;
-            position: relative;
-            overflow-y: auto;
-            border: 1px solid var(--accent);
+            background: var(--card-bg); width: 90%; max-width: 750px;
+            max-height: 90vh; border-radius: 20px; padding: 30px;
+            position: relative; overflow-y: auto; border: 1px solid var(--accent);
             box-shadow: 0 25px 50px rgba(0,0,0,0.6);
-            transform: scale(0.8) translateY(40px);
-            transition: var(--transition);
+            transform: scale(0.8) translateY(40px); transition: var(--transition);
         }
+        .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
 
-        .modal-overlay.active .modal-content {
-            transform: scale(1) translateY(0);
-        }
+        /* Warning Modal specific */
+        .warning-content { max-width: 500px; text-align: center; border-color: var(--warning); }
+        .warning-title { color: var(--warning); font-size: 1.8rem; font-weight: bold; }
+        .warning-divider { height: 2px; background: var(--warning); width: 60px; margin: 15px auto; border-radius: 10px; }
 
-        .close-x {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 28px;
-            color: #94a3b8;
-            cursor: pointer;
-        }
-
-        .player-wrapper {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            background: #000;
-            border-radius: 12px;
-            overflow: hidden;
-            margin: 20px 0;
-        }
-
+        /* Video Modal specific */
+        .close-x { position: absolute; top: 15px; right: 20px; font-size: 28px; color: #94a3b8; cursor: pointer; }
+        .player-wrapper { width: 100%; aspect-ratio: 16 / 9; background: #000; border-radius: 12px; overflow: hidden; margin: 20px 0; }
         video { width: 100%; height: 100%; display: block; }
+        .btn-full { width: 100%; background-color: #1e293b; color: var(--accent); border: 1px solid var(--accent); padding: 14px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-full:hover { background-color: var(--accent); color: #0b0f19; }
 
-        .btn-full {
-            width: 100%;
-            background-color: #1e293b;
-            color: var(--accent);
-            border: 1px solid var(--accent);
-            padding: 14px;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .btn-full:hover {
-            background-color: var(--accent);
-            color: #0b0f19;
-        }
-
-        .details-trigger {
-            margin-top: 20px;
-            text-align: center;
-            color: #94a3b8;
-            cursor: pointer;
-            font-size: 0.85rem;
-            text-decoration: underline;
-        }
-
-        .details-content {
-            display: none;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #2e3748;
-        }
-
+        /* Show More Details - Restored original positioning */
+        .details-trigger { margin-top: 20px; text-align: center; color: #94a3b8; cursor: pointer; font-size: 0.85rem; text-decoration: underline; }
+        .details-content { display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid #2e3748; }
         .details-content h3 { color: var(--accent); margin-bottom: 10px; }
         .details-content p { color: #cbd5e1; line-height: 1.6; font-size: 0.95rem; }
-
-        @media (max-width: 600px) {
-            .modal-content { padding: 20px; border-radius: 0; height: 100vh; max-height: 100vh; }
-        }
     </style>
 </head>
 <body>
 
-    <div class="header" id="mainHeader">
+    <header class="top-nav">
         <h1>Movies</h1>
-        <div class="divider"></div>
+    </header>
+
+    <div id="warningModal" class="modal-overlay active">
+        <div class="modal-content warning-content">
+            <div class="warning-title">⚠︎ Warning ⚠︎</div>
+            <div class="warning-divider"></div>
+            <p style="line-height: 1.6; color: #cbd5e1;">
+                We recommend using a VPN while using this website; especially when downloading movies.
+                Your ISP may be viewed by Government Officials and legal action can be taken against you if caught downloading any movies.
+                <br><br>
+                By clicking "I agree" you agree to the following; You are responsible for any legal action and will not sue for any reason.
+                You agree to not copyright our website <strong>Southern3DPrints.github.io ©</strong>
+            </p>
+            <button class="btn-full" onclick="acceptWarning()" style="margin-top:20px; background: var(--accent); color: #0b0f19;">I AGREE</button>
+        </div>
     </div>
 
+    <div id="controls">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search for a movie title..." oninput="filterMovies()">
+        </div>
+        <div class="filter-row">
+            <select id="genreSelect" onchange="filterMovies()">
+                <option value="all">All Genres</option>
+                <option value="Action">Action</option>
+                <option value="Comedy">Comedy</option>
+                <option value="Horror">Horror</option>
+            </select>
+            <select id="sortSelect" onchange="filterMovies()">
+                <option value="trending">Trending</option>
+                <option value="newest">Newest to Oldest</option>
+                <option value="oldest">Oldest to Newest</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="noResults">No movies found matching your search.</div>
+
     <div class="video-grid" id="mainGrid">
-        <div class="video-card" onclick="openPop('Anaconda (2025)', 'https://www.dropbox.com/scl/fi/ipfwgwemoz7xrjazxjlef/Anaconda.2025.720p.WEBRip.x264.AAC-YTS.BZ.mp4?rlkey=1xhir3ry192ewsmvzgdro2yve&st=9k2dg2x2&raw=1')">
-            <img src="https://pics.filmaffinity.com/Anaconda-237905960-large.jpg" class="poster-img" alt="Anaconda Poster">
+        <div class="video-card"
+             data-title="Anaconda"
+             data-genre="Action, Comedy"
+             data-year="2025"
+             data-trending="100"
+             data-cast="Jack Black, Thandiwe Newton, Paul Rudd"
+             data-desc="The 2025 Anaconda reimagining is a meta-comedy that follows a dysfunctional film crew hunting a real, giant snake in the Amazon."
+             onclick="openPop(this, 'https://www.dropbox.com/scl/fi/ipfwgwemoz7xrjazxjlef/Anaconda.2025.720p.WEBRip.x264.AAC-YTS.BZ.mp4?rlkey=1xhir3ry192ewsmvzgdro2yve&st=9k2dg2x2&raw=1')">
+            <img src="https://pics.filmaffinity.com/Anaconda-237905960-large.jpg" class="poster-img">
             <div class="video-title">Anaconda (2025)</div>
+        </div>
+
+        <div class="video-card"
+             data-title="Scream VI"
+             data-genre="Horror"
+             data-year="2023"
+             data-trending="80"
+             data-cast="Melissa Barrera, Jenna Ortega, Jasmin Savoy Brown"
+             data-desc="Following the latest Ghostface killings, the four survivors leave Woodsboro behind and start a fresh chapter in New York City."
+             onclick="openPop(this, 'YOUR_SCREAM_URL_HERE')">
+            <img src="https://m.media-amazon.com/images/M/MV5BODBjM2M4YTQtNmJlMS00MGU2LWI4ZGYtZTA1MzdmZDAyMjFkXkEyXkFqcGdeQXVyODE5NzE3OTE@._V1_.jpg" class="poster-img">
+            <div class="video-title">Scream VI (2023)</div>
         </div>
     </div>
 
@@ -205,15 +215,15 @@
                 <video id="mVideo" controls playsinline></video>
             </div>
 
-            <button id="mFull" class="btn-full">Go Fullscreen ⛶</button>
+            <button id="mFull" class="btn-full" onclick="goFull()">Go Fullscreen ⛶</button>
 
             <div class="details-trigger" id="detailsBtn" onclick="toggleDetails()">Show More Details</div>
            
             <div id="detailsArea" class="details-content">
                 <h3>Movie Details</h3>
-                <p><strong>Released:</strong> 2025 | <strong>Director:</strong> Tom Gormican</p>
-                <p><strong>Cast:</strong> Jack Black, Thandiwe Newton, Paul Rudd</p>
-                <p>The 2025 Anaconda reimagining is a meta-comedy that follows a dysfunctional film crew hunting a real, giant snake in the Amazon.</p>
+                <p id="mRel"></p>
+                <p id="mCast"></p>
+                <p id="mDesc"></p>
             </div>
         </div>
     </div>
@@ -221,54 +231,91 @@
     <script>
         const video = document.getElementById('mVideo');
         const modal = document.getElementById('videoModal');
-        const header = document.getElementById('mainHeader');
+        const controls = document.getElementById('controls');
         const grid = document.getElementById('mainGrid');
 
-        function openPop(title, url) {
-            document.getElementById('mTitle').innerText = title;
-            video.src = url;
-           
-            const movieID = "time_" + btoa(url).substring(0, 12);
+        // Initial blur for warning
+        window.onload = () => {
+            controls.style.filter = "blur(15px)";
+            grid.style.filter = "blur(15px)";
+            document.body.style.overflow = "hidden";
+        };
 
-            // This fires once the video is ready to play
-            video.oncanplay = function() {
-                const savedTime = localStorage.getItem(movieID);
-                if (savedTime) {
-                    video.currentTime = parseFloat(savedTime);
+        function acceptWarning() {
+            document.getElementById('warningModal').classList.remove('active');
+            controls.style.filter = "none";
+            grid.style.filter = "none";
+            document.body.style.overflow = "auto";
+        }
+
+        function filterMovies() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const selectedGenre = document.getElementById('genreSelect').value;
+            const sortOrder = document.getElementById('sortSelect').value;
+            const cards = Array.from(document.querySelectorAll('.video-card'));
+            const noRes = document.getElementById('noResults');
+           
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const title = card.dataset.title.toLowerCase();
+                const genres = card.dataset.genre.split(',').map(g => g.trim());
+               
+                const matchesSearch = title.includes(searchTerm);
+                const matchesGenre = (selectedGenre === 'all' || genres.includes(selectedGenre));
+
+                if (matchesSearch && matchesGenre) {
+                    card.style.display = "flex";
+                    visibleCount++;
+                } else {
+                    card.style.display = "none";
                 }
-                // Stop listening to this event so it doesn't loop
+            });
+
+            noRes.style.display = (visibleCount === 0) ? "block" : "none";
+
+            const sorted = cards.sort((a, b) => {
+                if (sortOrder === 'newest') return b.dataset.year - a.dataset.year;
+                if (sortOrder === 'oldest') return a.dataset.year - b.dataset.year;
+                return b.dataset.trending - a.dataset.trending;
+            });
+            sorted.forEach(c => grid.appendChild(c));
+        }
+
+        function openPop(card, url) {
+            document.getElementById('mTitle').innerText = card.dataset.title + " (" + card.dataset.year + ")";
+            document.getElementById('mRel').innerHTML = "<strong>Released:</strong> " + card.dataset.year;
+            document.getElementById('mCast').innerHTML = "<strong>Cast:</strong> " + card.dataset.cast;
+            document.getElementById('mDesc').innerText = card.dataset.desc;
+           
+            video.src = url;
+            const movieID = "time_" + btoa(url).substring(0, 12);
+           
+            video.oncanplay = () => {
+                const saved = localStorage.getItem(movieID);
+                if (saved) video.currentTime = parseFloat(saved);
                 video.oncanplay = null;
             };
 
-            // Save time as it plays
-            video.ontimeupdate = function() {
-                if (video.currentTime > 5) { // Only save if more than 5 seconds in
-                    localStorage.setItem(movieID, video.currentTime);
-                }
+            video.ontimeupdate = () => {
+                if (video.currentTime > 5) localStorage.setItem(movieID, video.currentTime);
             };
 
             modal.classList.add('active');
-            header.style.filter = "blur(10px)";
+            controls.style.filter = "blur(10px)";
             grid.style.filter = "blur(10px)";
             document.body.style.overflow = 'hidden';
-
-            document.getElementById('mFull').onclick = () => {
-                if (video.requestFullscreen) video.requestFullscreen();
-                else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
-            };
         }
 
         function closePop() {
             modal.classList.remove('active');
-            header.style.filter = "none";
+            controls.style.filter = "none";
             grid.style.filter = "none";
             document.body.style.overflow = 'auto';
-           
-            setTimeout(() => {
-                video.pause();
-                video.src = ""; // Clear src to stop bandwidth usage
-            }, 400);
+            setTimeout(() => { video.pause(); video.src = ""; }, 400);
         }
+
+        function goFull() { if (video.requestFullscreen) video.requestFullscreen(); }
 
         function toggleDetails() {
             const area = document.getElementById('detailsArea');
